@@ -4,6 +4,12 @@ var ownership_black
 var width
 var height
 
+function failed() {
+    $('#white').text('Failed')
+    $('#black').text('Failed')
+    $('#combined').text('Failed')
+}
+
 function show() {
     width = board[0].length
     height = board.length
@@ -31,7 +37,10 @@ function show() {
 
     $.when(ajax_white, ajax_black).done(function(result_white, result_black) {
         if(result_white[1] != 'success' || result_black[1] != 'success')
+        {
+            failed()
             return
+        }
 
         ownership_white = result_white[0].ownership
         ownership_black = result_black[0].ownership
@@ -138,7 +147,8 @@ function getBoard() {
                success: function(data, textStatus, jqXGR) {
                    board = $.parseJSON(data.contents).board
                    show()
-               }
+               },
+               error: failed
            }
           )
 }
