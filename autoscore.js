@@ -5,6 +5,9 @@ var combined_ownership
 var width
 var height
 var regions
+var used_regions
+var region_resolution
+var algorithm_ownership
 
 function state_emoji(s) {
     switch(s) {
@@ -28,7 +31,7 @@ function state_emoji(s) {
 }
 
 function region_emoji(r) {
-    return String.fromCodePoint(r+0x1f343)
+    return String.fromCodePoint(r+0x1f344)
 }
 
 function failed() {
@@ -82,6 +85,89 @@ function show_algorithm() {
 
     compute_combined_ownership()
     find_regions()
+    resolve_regions()
+    compute_algorithm_ownership()
+}
+
+function compute_algorithm_ownership() {
+    var text = ''
+
+    algorithm_ownership = []
+
+    for(var y=0; y<height; y++) {
+        algorithm_ownership[y] = []
+
+        for(var x=0; x<width; x++) {
+            if(combined_ownership[y][x] == -3 || combined_ownership[y][x] == -4) {
+                // need to resolve
+                var current = board[y][x] // white or black stone
+                var r = regions[y][x]
+                var winner = region_resolution[r]
+                if(current == winner) {
+                    // solidly alive
+                    algorithm_ownership[y][x] = current
+                }
+                else if(winner == 0) {
+                    // seki alive?
+                    algorithm_ownership[y][x] = current
+                }
+                else {
+                    // call it dead
+                    algorithm_ownership[y][x] = -current
+                }
+            }
+            else {
+                algorithm_ownership[y][x] = combined_ownership[y][x]
+            }
+
+            text += state_emoji(algorithm_ownership[y][x])
+        }
+        text += "\n"
+    }
+
+    $('#algorithm').text(text)
+}
+
+function resolve_regions() {
+    var region_total = []
+    var region_black = []
+    var region_white = []
+
+    count = 0
+    for(var y=0; y<height; y++) {
+        for(var x=0; x<width; x++) {
+            var r = regions[y][x]
+
+            if(!region_total[r])
+            {
+                region_total[r] = 0
+                region_black[r] = 0
+                region_white[r] = 0
+            }
+
+            region_total[r] ++
+
+            var c = combined_ownership[y][x]
+            if(c == -3)
+                region_black[r] ++
+            if(c == -4)
+                region_white[r] ++
+        }
+    }
+
+    region_resolution = []
+    for(var r = 0; r < region_total.length; r++) {
+        if(region_black[r] > region_white[r]) {
+            region_resolution[r] = 1
+        }
+        else if(region_black[r] < region_white[r]) {
+            region_resolution[r] = 2
+        }
+        else {
+            region_resolution[r] = 0
+        }
+    }
+    var x = 1
 }
 
 function find_regions() {
@@ -93,7 +179,7 @@ function find_regions() {
     // out to be the same.
     regions = []
     var remap_regions = {}
-    var used_regions = 0
+    used_regions = 0
 
     for(var y=0; y<height; y++) {
         regions[y] = []
