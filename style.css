@@ -2,3 +2,16 @@ pre {
   display: inline-block;
   background-color: #ba9f65;
 }
+
+.section {
+  display: inline-block;
+  text-align: center;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+h2 {
+  font-size: 110%;
+  margin: 0;
+  padding: 0;
+}
