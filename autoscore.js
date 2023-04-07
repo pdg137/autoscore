@@ -1,8 +1,35 @@
 var board
 var ownership_white
 var ownership_black
+var combined_ownership
 var width
 var height
+var regions
+
+function state_emoji(s) {
+    switch(s) {
+    case -1:
+        return '⬛'
+    case -2:
+        return '⬜'
+    case 1:
+        return '⚫'
+    case 2:
+        return '⚪'
+    case 0:
+        return '➕'
+    case -3:
+        return '🖤'
+    case -4:
+        return '🤍'
+    default:
+        return '❓'
+    }
+}
+
+function region_emoji(r) {
+    return String.fromCodePoint(r+0x1f343)
+}
 
 function failed() {
     $('#white').text('Failed')
@@ -54,12 +81,98 @@ function show_algorithm() {
     show_ownership(ownership_black, $('#black'))
 
     compute_combined_ownership()
+    find_regions()
+}
+
+function find_regions() {
+    // regions: array with 0 for live stones, and 1, 2, 3,
+    // etc. for continguous regions of territory/dame/unsettled
+    // points.
+    //
+    // remap_regions: hash mapping regions to other ones that turned
+    // out to be the same.
+    regions = []
+    var remap_regions = {}
+    var used_regions = 0
+
+    for(var y=0; y<height; y++) {
+        regions[y] = []
+
+        for(var x=0; x<width; x++) {
+            var v = combined_ownership[y][x]
+
+            if(v > 0) {
+                regions[y][x] = 0
+                continue
+            }
+
+            var left = 0
+            var up = 0
+            if(x > 0)
+                left = regions[y][x-1]
+            if(y > 0)
+                up = regions[y-1][x]
+
+            if(!left && !up) {
+                // start new region
+                used_regions ++
+                regions[y][x] = used_regions
+                continue
+            }
+
+            if(left && up) {
+                if(left > up) {
+                    remap_regions[left] = up
+                    regions[y][x] = up
+                }
+                else if(up > left) {
+                    remap_regions[up] = left
+                    regions[y][x] = left
+                }
+                else
+                    regions[y][x] = up
+            }
+            else if(left)
+                regions[y][x] = left
+            else // up
+                regions[y][x] = up
+        }
+    }
+
+    // now remap the regions
+    for(var y=0; y<height; y++) {
+        for(var x=0; x<width; x++) {
+            r = regions[y][x]
+            while(remap_regions[r])
+                r = remap_regions[r]
+            regions[y][x] = r
+        }
+    }
+
+    text = ''
+    for(var y=0; y<height; y++) {
+        for(var x=0; x<width; x++) {
+            var r = regions[y][x]
+            if(r == 0) {
+                text += state_emoji(board[y][x])
+            }
+            else {
+                text += region_emoji(r)
+            }
+        }
+        text += "\n"
+    }
+    $('#regions').text(text)
 }
 
 function compute_combined_ownership() {
     var text = ''
 
+    combined_ownership = []
+
     for(var y=0; y<height; y++) {
+        combined_ownership[y] = []
+
         for(var x=0; x<width; x++) {
             var state = board[y][x]
             var owner1 = get_owner(ownership_white, x, y)
@@ -80,6 +193,8 @@ function compute_combined_ownership() {
                 result = -3
             else if(owner == 0 && state == 2) // unresolved white
                 result = -4
+
+            combined_ownership[y][x] = result
 
             switch(result) {
             case -1:
