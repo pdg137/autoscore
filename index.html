@@ -9,6 +9,27 @@
 </head>
 <body>
 
+  <h1>
+    Autoscore v1
+  </h1>
+
+  <ul>
+    <li>KataGo checks the position with White having next move
+    <li>KataGo checks the position with Black having next move
+    <li>Any discrepancy between these two is marked as “unsettled”, the rest is marked as “settled”.
+    <li>Chains of unsettled area (open intersections + unsettled stones + dead stones) are considered as a whole.
+    <li>If the number of unsettled Black stones is larger than the number of unsettled White stones, mark only the unsettled White stones dead
+    <li>If the number of unsettled White stones is larger than the number of unsettled Black stones, mark only the unsettled Black stones dead
+    <li>If the numbers are equal, leave the unsettled stones alive (it will be dame)
+  </ul>
+
+  <p>
+  <form>
+    Enter game ID: <input type="text" name="game">
+    <input type="submit" value="Score">
+  </form>
+  </p>
+
 <div class='section'>
 <h2>Board state</h2>
 <pre id='board'></pre>

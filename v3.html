@@ -4,13 +4,13 @@
 <meta charset='utf-8'>
 <meta content='width=device-width, initial-scale=1' name='viewport'>
 <script src='https://code.jquery.com/jquery-3.6.4.min.js'></script>
-<script src='autoscore_v2.js'></script>
+<script src='autoscore_v3.js'></script>
 <link rel='stylesheet' href='style.css'>
 </head>
 <body>
 
   <h1>
-    Autoscore v2
+    Autoscore v3
   </h1>
 
   <ul>
@@ -19,16 +19,20 @@
     <li>Any discrepancy between these two is marked as “unsettled”, the rest is marked as “settled”.
     <li>Chains of unsettled area (open intersections + unsettled stones + dead stones) are considered as a whole.
     <li>White and black stones on the boundary of each area are counted.
-    <li>Do not count stones only bordering unsettled stones.
+    <li>Do not count stones only bordering dead/unsettled stones.
     <li>"Dead" stones in dame (border contains both white and black) are considered unsettled.
-    <li>If Black has more stones on the boundary, mark only the unsettled White stones dead.
-    <li>If White has more stones on the boundary, mark only the unsettled Black stones dead.
-    <li>If the numbers are equal, leave the unsettled stones alive (it will be dame).
+    <li>If the whole boundary is Black, mark only the unsettled White stones dead.
+    <li>If the whole boundary is White, mark only the unsettled Black stones dead.
+    <li>Otherwise (including if there is no boundary) leave all unsettled stones alive.
   </ul>
 
   <p>
   <form>
     Enter game ID: <input type="text" name="game">
+    <input type="submit" value="Score">
+  </form>
+  <form>
+    Or enter board state: <input type="text" name="board">
     <input type="submit" value="Score">
   </form>
   </p>
@@ -56,6 +60,11 @@
 <div class='section'>
 <h2>Regions</h2>
 <pre id='regions'></pre>
+</div>
+
+<div class='section'>
+<h2>Unsettling dead stones in dame</h2>
+<pre id='combined2'>loading...</pre>
 </div>
 
 <div class='section'>
