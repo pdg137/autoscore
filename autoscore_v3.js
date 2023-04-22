@@ -386,7 +386,7 @@ function getEstimate(player_to_move) {
         board_state: board
     }
 
-    return $.ajax('https://ai.online-go.com/api/score',
+    return $.ajax('https://beta-ai.online-go.com/api/score',
            {
                type: 'post',
                data: JSON.stringify(data),
