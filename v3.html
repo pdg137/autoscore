@@ -18,11 +18,8 @@
     <li>KataGo checks the position with Black having next move
     <li>Any discrepancy between these two is marked as “unsettled”, the rest is marked as “settled”.
     <li>Chains of unsettled area (open intersections + unsettled stones + dead stones) are considered as a whole.
-    <li>White and black stones on the boundary of each area are counted.
-    <li>Do not count stones only bordering dead/unsettled stones.
-    <li>"Dead" stones in dame (border contains both white and black) are considered unsettled.
-    <li>If the whole boundary is Black, mark only the unsettled White stones dead.
-    <li>If the whole boundary is White, mark only the unsettled Black stones dead.
+    <li>Count the white/black stones on the boundary of each area, not counting stones touching only unsettled stones; consider "dead" stones that would be in dame to be unsettled.
+    <li>If the whole boundary is one color, mark unsettled stones of the opposite color dead.
     <li>Otherwise (including if there is no boundary) leave all unsettled stones alive.
   </ul>
 
