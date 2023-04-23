@@ -219,7 +219,11 @@ function resolve_regions(ownership) {
     region_resolution = []
     for(var r = 0; r < region_border_black.length; r++) {
         if(!region_border_black[r])
+        {
+            // no border was found
+            region_resolution[r] = 0
             continue
+        }
         black_border_count = Object.keys(region_border_black[r]).length
         white_border_count = Object.keys(region_border_white[r]).length
 
