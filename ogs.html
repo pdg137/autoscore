@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='utf-8'>
+<meta content='width=device-width, initial-scale=1' name='viewport'>
+<script src='https://code.jquery.com/jquery-3.6.4.min.js'></script>
+<script src='autoscore_ogs.js'></script>
+<link rel='stylesheet' href='style.css'>
+</head>
+<body>
+
+  <h1>
+    OGS Autoscore
+  </h1>
+
+  <ul>
+    <li>KataGo checks the position ??
+    <li>Something about marking seki
+    <li>??
+  </ul>
+
+  <p>
+  <form>
+    Enter game ID: <input type="text" name="game">
+    Rules: <select name="rules">
+      <option value="japanese">japanese</option>
+      <option value="chinese">chinese</option>
+      <option value="aga">aga</option>
+    </select>
+    <input type="submit" value="Score">
+  </form>
+  <form>
+    Or enter board state: <input type="text" name="board">
+    Rules: <select name="rules">
+      <option value="japanese">japanese</option>
+      <option value="chinese">chinese</option>
+      <option value="aga">aga</option>
+    </select>
+    <input type="submit" value="Score">
+  </form>
+  </p>
+
+<div class='section'>
+<h2>Board state</h2>
+<pre id='board'></pre>
+</div>
+
+<div class='section'>
+<h2>Autoscore (black to move)</h2>
+<pre id='black'></pre>
+</div>
+
+<div class='section'>
+<h2>Autoscore (white to move)</h2>
+<pre id='white'></pre>
+</div>
+
+<div style='text-align: left;'>
+<h2>Key</h2>
+➕ empty points (territory in the autoscore results)<br>
+🔺 dame<br>
+⚫⚪ Live<br>
+⬛⬜ Dead<br>
+🖤🤍 Unsettled (I think this does not happen)<br>
+</div>
+
+</body>
+</html>
